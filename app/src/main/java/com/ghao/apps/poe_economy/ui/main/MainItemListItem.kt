@@ -9,23 +9,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ghao.apps.poe_economy.R
 import com.ghao.apps.poe_economy.theme.DynamicColor
@@ -34,10 +29,11 @@ import com.ghao.apps.poe_economy.theme.Spacing
 import com.ghao.apps.poe_economy.theme.StaticColor
 import com.ghao.apps.poe_economy.util.toDp
 import com.ghao.lib.core.data.Item
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun ItemListItem(
+fun MainItemListItem(
     item: Item,
     changeTextWidth: Int,
     modifier: Modifier = Modifier,
@@ -51,8 +47,10 @@ fun ItemListItem(
     ) {
         GlideImage(
             modifier = Modifier
-                .size(24.dp)
+                .wrapContentHeight()
+                .width(20.dp)
                 .align(Alignment.CenterVertically),
+            imageOptions = ImageOptions(contentScale = ContentScale.FillWidth),
             imageModel = {
                 item.icon
             }
@@ -113,11 +111,15 @@ fun ItemListItem(
                 )
 
                 val change =
-                    if (item.sparkline.totalChange >= 0) "+${item.sparkline.totalChange}%" else "${item.sparkline.totalChange}%"
+                    if (item.sparkline.totalChange >= 0)
+                        "+${item.sparkline.totalChange}%"
+                    else
+                        "${item.sparkline.totalChange}%"
                 val textColor =
-                    if (item.sparkline.totalChange >= 0) StaticColor.Green500.copy(alpha = 0.9f) else StaticColor.Red500.copy(
-                        alpha = 0.9f
-                    )
+                    if (item.sparkline.totalChange >= 0)
+                        StaticColor.Green500.copy(alpha = 0.9f)
+                    else
+                        StaticColor.Red500.copy(alpha = 0.9f)
                 Text(
                     modifier = Modifier.width(changeTextWidth.toDp()),
                     text = change,

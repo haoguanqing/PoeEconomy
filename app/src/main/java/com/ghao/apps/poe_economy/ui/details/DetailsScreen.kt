@@ -85,9 +85,9 @@ fun DetailsContent(
 ) {
     Surface(modifier = modifier) {
         // val items = viewModel.getItems().collectAsState(initial = Result.Loading)
-        val items = viewModel.getItemsSingle().subscribeAsState(initial = Result.Loading)
+        // val items = viewModel.getItemsSingle().subscribeAsState(initial = Result.Loading)
 
-        when (val result = items.value) {
+        /*when (val result = items.value) {
             Result.Loading -> {
                 Text(
                     text = "Loading...",
@@ -128,6 +128,6 @@ fun DetailsContent(
                     }
                 }
             }
-        }
+        }*/
     }
 }
