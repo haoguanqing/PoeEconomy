@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="system_bar_color">@color/gray_1100</color>
+</resources>

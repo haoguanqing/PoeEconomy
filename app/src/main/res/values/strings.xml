@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">POE Economy</string>
+
+    <string name="title_transaction_details">Details</string>
+    <string name="title_merchant_name">Merchant name</string>
+    <string name="title_category">Category</string>
+    <string name="title_location">Location</string>
+    <string name="title_payment_information">Payment information</string>
+    <string name="title_card_number">Card number</string>
+    <string name="title_has_receipt">Has Receipt</string>
+
+
+    <string name="item_type_currency">Currency</string>
+    <string name="item_type_fragment">Fragments</string>
+    <string name="item_type_artifact">Artifacts</string>
+    <string name="item_type_oil">Oils</string>
+    <string name="item_type_incubator">Incubators</string>
+    <string name="item_type_scarab">Scarabs</string>
+    <string name="item_type_fossil">Fossils</string>
+    <string name="item_type_resonator">Resonators</string>
+    <string name="item_type_essence">Essences</string>
+    <string name="item_type_divination_card">Divination Cards</string>
+    <string name="item_type_skill_gem">Skill Gems</string>
+    <string name="item_type_base_type">Base Types</string>
+    <string name="item_type_helmet_enchant">Helmet Enchants</string>
+    <string name="item_type_unique_map">Unique Maps</string>
+    <string name="item_type_Map">Maps</string>
+
+    <string name="button_back">Back</string>
+</resources>
