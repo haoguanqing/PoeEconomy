@@ -1,11 +1,8 @@
 package com.ghao.lib.core.network
 
 import androidx.annotation.StringDef
-import com.ghao.lib.core.data.Item
-import com.ghao.lib.core.data.json.JsonItem
 import com.ghao.lib.core.data.json.JsonLines
 import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.flow.Flow
 import retrofit2.http.GET
 import retrofit2.http.Query
 

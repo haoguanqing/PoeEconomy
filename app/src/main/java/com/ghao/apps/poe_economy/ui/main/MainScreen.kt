@@ -43,6 +43,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.ghao.apps.poe_economy.R
@@ -51,6 +53,7 @@ import com.ghao.apps.poe_economy.theme.DynamicColor
 import com.ghao.apps.poe_economy.theme.Icon
 import com.ghao.apps.poe_economy.theme.Spacing
 import com.ghao.apps.poe_economy.util.toDp
+import com.ghao.lib.core.data.ItemCategory
 import com.ghao.lib.core.repository.Result
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -104,6 +107,7 @@ fun MainScreen(
     )
 }
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun MainContent(
     modifier: Modifier = Modifier,
@@ -111,10 +115,10 @@ fun MainContent(
     listState: LazyListState,
     navController: NavController
 ) {
-    viewModel.getItems()
+    viewModel.getItems("Sanctum", ItemCategory.UniqueAccessory)
 
     Box(modifier = modifier) {
-        val items = viewModel.items.collectAsState(initial = Result.Loading)
+        val items = viewModel.items.collectAsStateWithLifecycle()
 
         when (val result = items.value) {
             Result.Loading -> {
@@ -141,70 +145,11 @@ fun MainContent(
             }
 
             is Result.Success -> {
-                var changeTextWidth by remember { mutableStateOf(0) }
-                var headerHeight by remember { mutableStateOf(0) }
-                var scrollDelta by remember { mutableStateOf(0f) }
-
-                val nestedScrollConnection = remember {
-                    object : NestedScrollConnection {
-                        override fun onPostScroll(
-                            consumed: Offset,
-                            available: Offset,
-                            source: NestedScrollSource
-                        ): Offset {
-                            scrollDelta += consumed.y
-                            scrollDelta = scrollDelta.coerceIn(-headerHeight.toFloat(), 0f)
-                            return super.onPostScroll(consumed, available, source)
-                        }
-                    }
-                }
-
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .nestedScroll(nestedScrollConnection),
-                    verticalArrangement = Arrangement.spacedBy(Spacing.Space2),
-                    state = listState,
-                    // contentPadding = PaddingValues(Spacing.Space12),
-                ) {
-                    item {
-                        ItemListHeader(
-                            modifier = Modifier.fillMaxWidth(),
-                            changeTextWidth = changeTextWidth
-                        )
-                    }
-
-                    item {
-                        Divider(color = DynamicColor.divider, thickness = 1.dp)
-                    }
-
-                    itemsIndexed(result.content) { index, item ->
-                        ItemListItem(
-                            item = item,
-                            changeTextWidth = changeTextWidth,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            // todo: Open details screen
-                            // navController.navigate("${Route.TRANSACTION_DETAILS}/${transaction.id}")
-                        }
-                        // if (index < items.lastIndex) Divider(color = DynamicColor.divider, thickness = 1.dp)
-                    }
-                }
-
-
-                StickyItemListHeader(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .align(alignment = Alignment.TopCenter)
-                        .offset(y = scrollDelta.roundToInt().toDp())
-                        .onGloballyPositioned {
-                            headerHeight = it.size.height
-                        },
-                    changeTextWidth = changeTextWidth
-                ) {
-                    changeTextWidth = it.size.width
-                }
+                MainItemList(
+                    modifier = Modifier.fillMaxSize(),
+                    listState = listState,
+                    items = result.content
+                )
             }
         }
     }
