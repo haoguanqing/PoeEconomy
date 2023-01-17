@@ -17,13 +17,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += [
-                        "room.schemaLocation":"$projectDir/schemas".toString(),
-                        "room.incremental":"true",
-                        "room.expandProjection":"true"]
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
     }
 
@@ -67,10 +62,6 @@ dependencies {
     debugImplementation "com.facebook.soloader:soloader:0.10.4"
     debugImplementation "com.facebook.flipper:flipper-network-plugin:$flipper_version"
     releaseImplementation "com.facebook.flipper:flipper-noop:$flipper_version"
-
-    // Stetho
-    api 'com.facebook.stetho:stetho:1.5.1'
-    api 'com.facebook.stetho:stetho-okhttp3:1.5.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

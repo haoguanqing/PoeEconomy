@@ -13,6 +13,10 @@ buildscript {
         flipper_version = "0.176.1"
         coroutines_version = '1.6.4'
     }
+
+    dependencies {
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:10.1.0"
+    }
 }
 
 plugins {
@@ -22,6 +26,11 @@ plugins {
     id "org.jetbrains.kotlin.kapt" version "$kotlin_gradle_plugin_version"
     id 'org.jetbrains.kotlin.jvm' version "$kotlin_gradle_plugin_version" apply false
     id 'com.google.dagger.hilt.android' version "$hilt_version" apply false
+    id "org.jlleitschuh.gradle.ktlint" version "10.1.0"
+}
+
+allprojects {
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
 }
 
 task clean(type: Delete) {
