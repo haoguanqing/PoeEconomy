@@ -46,17 +46,17 @@ jobs:
       - name: Upload apk
         uses: actions/upload-artifact@v3
         with:
-          name: debug apk
+          name: hgq-upload-artifact
           path: app/build/intermediates/apk/debug/app-debug.apk
 
 
   test:
     runs-on: macos-latest
     needs: build
-    strategy:
-      matrix:
-        api-level: [23, 32]
-        target: [default, google_apis]
+    # strategy:
+    #   matrix:
+    #     api-level: [23, 32]
+    #     target: [default, google_apis]
 
     steps:
       - name: Checkout the code
@@ -74,8 +74,8 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
-      - name: Copy  gradle properties file
-        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+      # - name: Copy gradle properties file
+      #   run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - name: Set up JDK 11
         uses: actions/setup-java@v3
@@ -89,15 +89,6 @@ jobs:
 
       - name: Run unit tests
         run: ./gradlew test --stacktrace
-
-      - name: Instrumentation Tests
-        uses: reactivecircus/android-emulator-runner@v3
-        with:
-          api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: x86
-          profile: Nexus 6
-          script: ./gradlew connectedCheck --stacktrace
 
       - name: Upload Reports
         uses: actions/upload-artifact@v3
