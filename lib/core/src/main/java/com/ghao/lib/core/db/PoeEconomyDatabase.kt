@@ -16,10 +16,10 @@ class PoeEconomyDatabase @Inject constructor(
 
     private val dao by lazy {
         Room.databaseBuilder(
-                appContext,
-                PoeRoomDatabase::class.java,
-                PoeRoomDatabase.DB_NAME
-            )
+            appContext,
+            PoeRoomDatabase::class.java,
+            PoeRoomDatabase.DB_NAME
+        )
             .build()
             .poeEconomyDao()
     }
@@ -28,20 +28,11 @@ class PoeEconomyDatabase @Inject constructor(
         return dao.insertAll(transactions)
     }
 
-    fun getAllTransactions(orderBy: OrderBy = OrderBy.DEFAULT): Single<List<Transaction>> {
-        return when (orderBy) {
-            OrderBy.DEFAULT -> dao.getAll()
-            OrderBy.DATE -> dao.getAllOrderByDate()
-            OrderBy.MERCHANT_NAME -> dao.getAllOrderByMerchantName()
-            OrderBy.MERCHANT_CATEGORY -> dao.getAllOrderByMerchantCategory()
-        }
+    fun getAllTransactions(): Single<List<Transaction>> {
+        return dao.getAll()
     }
 
     fun findTransactionById(id: Long): Single<Transaction> {
         return dao.findById(id)
-    }
-
-    enum class OrderBy {
-        DEFAULT, DATE, MERCHANT_NAME, MERCHANT_CATEGORY
     }
 }

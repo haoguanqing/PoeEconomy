@@ -112,5 +112,4 @@ fun StickyItemListHeader(
 
         Divider(color = DynamicColor.divider, thickness = 1.dp)
     }
-
 }

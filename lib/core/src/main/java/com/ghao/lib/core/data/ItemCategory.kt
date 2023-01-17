@@ -35,5 +35,3 @@ enum class ItemCategory {
         }
     }
 }
-
-

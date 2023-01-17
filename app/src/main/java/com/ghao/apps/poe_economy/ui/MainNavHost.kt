@@ -30,16 +30,16 @@ fun MainNavHost(
     NavHost(navController = navController, startDestination = Route.MAIN) {
         // Main screen
         composable(route = Route.MAIN) { MainScreen(modifier, viewModel, navController) }
-        // Detailed screen
+        // Item details screen
         composable(
-            route = "${Route.TRANSACTION_DETAILS}/{transactionId}",
-            arguments = listOf(navArgument("transactionId") { type = NavType.LongType })
+            route = "${Route.ITEM_DETAILS}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.LongType })
         ) { backStackEntry ->
             DetailsScreen(
                 modifier = modifier,
                 viewModel = viewModel,
                 navController = navController,
-                transactionId = backStackEntry.arguments!!.getLong("transactionId")
+                transactionId = backStackEntry.arguments!!.getLong("itemId")
             )
         }
     }
