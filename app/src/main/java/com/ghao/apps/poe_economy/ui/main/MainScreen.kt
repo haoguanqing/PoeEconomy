@@ -1,25 +1,14 @@
 package com.ghao.apps.poe_economy.ui.main
 
-import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -27,22 +16,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -51,12 +29,11 @@ import com.ghao.apps.poe_economy.R
 import com.ghao.apps.poe_economy.data.PoeEconomyViewModel
 import com.ghao.apps.poe_economy.theme.DynamicColor
 import com.ghao.apps.poe_economy.theme.Icon
+import com.ghao.apps.poe_economy.theme.Spacer
 import com.ghao.apps.poe_economy.theme.Spacing
-import com.ghao.apps.poe_economy.util.toDp
 import com.ghao.lib.core.data.ItemCategory
 import com.ghao.lib.core.repository.Result
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 // import androidx.compose.runtime.getValue
 // import androidx.compose.runtime.setValue
@@ -115,10 +92,14 @@ fun MainContent(
     listState: LazyListState,
     navController: NavController
 ) {
-    viewModel.getItems("Sanctum", ItemCategory.UniqueAccessory)
+    // viewModel.getItems("Sanctum", ItemCategory.UniqueAccessory)
+    viewModel.getCurrency("Sanctum", ItemCategory.Currency)
 
     Box(modifier = modifier) {
-        val items = viewModel.items.collectAsStateWithLifecycle()
+        val items = viewModel.currency.collectAsStateWithLifecycle()
+        /*val items = viewModel
+            .getCurrencySingle("Sanctum", ItemCategory.Currency)
+            .subscribeAsState(initial = Result.Loading)*/
 
         when (val result = items.value) {
             Result.Loading -> {
@@ -132,20 +113,32 @@ fun MainContent(
             }
 
             is Result.Error -> {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.Center)
+                ) {
                     Text(
                         text = "Error",
-                        style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Medium)
+                        style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold)
                     )
+                    Spacer(space = Spacing.Space8)
                     Text(
                         text = result.e.message ?: "",
                         style = MaterialTheme.typography.body1
                     )
+                    Spacer(space = Spacing.Space16)
                 }
             }
 
             is Result.Success -> {
-                MainItemList(
+                /*MainItemList(
+                    modifier = Modifier.fillMaxSize(),
+                    listState = listState,
+                    items = result.content
+                )*/
+
+                MainCurrencyList(
                     modifier = Modifier.fillMaxSize(),
                     listState = listState,
                     items = result.content

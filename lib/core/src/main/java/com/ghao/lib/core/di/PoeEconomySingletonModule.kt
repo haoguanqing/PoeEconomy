@@ -1,5 +1,6 @@
 package com.ghao.lib.core.di
 
+import android.util.Log
 import com.ghao.lib.core.TestConfig
 import com.ghao.lib.core.network.PoeApiService
 import com.ghao.lib.core.network.PoeNinjaService
@@ -35,7 +36,7 @@ interface PoeEconomySingletonModule {
                 // .addNetworkInterceptor(FlipperOkhttpInterceptor(NetworkFlipperPlugin()))
                 .addNetworkInterceptor {
                     val request = it.request()
-                    // Log.e("HGQQQ", request.url.toUrl().toString())
+                    Log.e("HGQQQ", request.url.toUrl().toString())
                     it.proceed(request)
                 }
                 .build()
@@ -55,8 +56,8 @@ interface PoeEconomySingletonModule {
 
         @Singleton
         @Provides
-        fun poeNinjaService(@Named("PoeNinjaRetrofit") poeNinjaRetrofit: Retrofit): PoeNinjaService {
-            return poeNinjaRetrofit.create(PoeNinjaService::class.java)
+        fun poeNinjaService(@Named("PoeNinjaRetrofit") retrofit: Retrofit): PoeNinjaService {
+            return retrofit.create(PoeNinjaService::class.java)
         }
 
         @Singleton

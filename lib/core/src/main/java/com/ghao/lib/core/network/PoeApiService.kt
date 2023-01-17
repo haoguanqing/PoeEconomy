@@ -1,7 +1,6 @@
 package com.ghao.lib.core.network
 
 import com.ghao.lib.core.data.League
-import com.ghao.lib.core.data.json.JsonTransaction
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.GET
 

@@ -1,6 +1,7 @@
 package com.ghao.lib.core.network
 
 import androidx.annotation.StringDef
+import com.ghao.lib.core.data.json.JsonCurrencyLines
 import com.ghao.lib.core.data.json.JsonLines
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
@@ -11,20 +12,23 @@ interface PoeNinjaService {
     @GET("/api/data/currencyoverview")
     suspend fun getCurrency(
         @Query("league") league: String,
-        @Query("type") @CurrencyType type: String
-    ): JsonLines
+        @Query("type") @CurrencyType type: String,
+        @Query("language") language: String = "en"
+    ): JsonCurrencyLines
 
     @GET("/api/data/itemoverview")
     suspend fun getItems(
         @Query("league") league: String,
-        @Query("type") @ItemType type: String
+        @Query("type") @ItemType type: String,
+        @Query("language") language: String = "en"
     ): JsonLines
 
-    @GET("/api/data/itemoverview")
-    fun getItemsSingle(
+    @GET("/api/data/currencyoverview")
+    fun getCurrencySingle(
         @Query("league") league: String,
-        @Query("type") @ItemType type: String
-    ): Single<JsonLines>
+        @Query("type") @ItemType type: String,
+        @Query("language") language: String = "en"
+    ): Single<JsonCurrencyLines>
 
     companion object {
         const val POE_NINJA_BASE_URL = "https://poe.ninja/"

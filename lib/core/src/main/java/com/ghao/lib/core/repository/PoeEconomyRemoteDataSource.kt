@@ -1,12 +1,16 @@
 package com.ghao.lib.core.repository
 
+import android.util.Log
 import com.ghao.lib.core.data.Item
 import com.ghao.lib.core.data.ItemCategory
 import com.ghao.lib.core.data.League
+import com.ghao.lib.core.data.json.CurrencyDetails
+import com.ghao.lib.core.data.json.JsonCurrency
 import com.ghao.lib.core.network.CurrencyType
 import com.ghao.lib.core.network.ItemType
 import com.ghao.lib.core.network.PoeApiService
 import com.ghao.lib.core.network.PoeNinjaService
+import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -28,14 +32,23 @@ class PoeEconomyRemoteDataSource @Inject constructor(
     fun getCurrency(
         league: String,
         @CurrencyType type: String
-    ): Flow<List<Item>> {
+    ): Flow<List<Pair<JsonCurrency, CurrencyDetails>>> {
+        Log.e("HGQQQ", "PoeEconomyRemoteDataSource#getCurrency()")
         return flow {
+            val items = poeNinjaService.getCurrency(league, type)
+            emit(items)
             poeNinjaService
                 .getCurrency(league, type)
-                .let { emit(it) }
+                .let {
+                    Log.e("HGQQQ", "finished getCurrency request $it")
+                    emit(it)
+                }
         }
             .map { lines ->
-                lines.lines.map { it.toDbEntity(ItemCategory.fromType(type)) }
+                val detailsList = lines.currencyDetails
+                lines.lines.map { currency ->
+                    currency to detailsList.first { it.name == currency.currencyTypeName }
+                }
             }
             .flowOn(Dispatchers.IO)
     }
@@ -54,14 +67,17 @@ class PoeEconomyRemoteDataSource @Inject constructor(
             .flowOn(Dispatchers.IO)
     }
 
-    /*fun getItemsSingle(
+    fun getCurrencySingle(
         league: String,
         @ItemType type: String
-    ): Single<List<Item>> {
+    ): Single<List<Pair<JsonCurrency, CurrencyDetails>>> {
         return poeNinjaService
-            .getItemsSingle(league, type)
+            .getCurrencySingle(league, type)
             .map { lines ->
-                lines.lines.map { it.toDbEntity(ItemCategory.fromType(type)) }
+                val detailsList = lines.currencyDetails
+                lines.lines.map { currency ->
+                    currency to detailsList.first { it.name == currency.currencyTypeName }
+                }
             }
-    }*/
+    }
 }

@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.ghao.apps.poe_economy.data.PoeEconomyViewModel
-import com.ghao.apps.poe_economy.ui.MainNavHost
 import com.ghao.apps.poe_economy.theme.MyTheme
+import com.ghao.apps.poe_economy.ui.MainNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,4 +29,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
