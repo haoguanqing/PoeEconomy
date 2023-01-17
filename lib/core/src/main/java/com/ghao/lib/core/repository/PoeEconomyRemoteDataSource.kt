@@ -5,11 +5,10 @@ import com.ghao.lib.core.data.ItemCategory
 import com.ghao.lib.core.data.League
 import com.ghao.lib.core.network.CurrencyType
 import com.ghao.lib.core.network.ItemType
-import com.ghao.lib.core.network.Singletons
-import io.reactivex.rxjava3.core.Single
+import com.ghao.lib.core.network.PoeApiService
+import com.ghao.lib.core.network.PoeNinjaService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -17,10 +16,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PoeEconomyRemoteDataSource @Inject constructor() {
+class PoeEconomyRemoteDataSource @Inject constructor(
+    private val poeNinjaService: PoeNinjaService,
+    private val poeApiService: PoeApiService,
+) {
 
     fun getLeague(): Flow<List<League>> {
-        return Singletons.poeApiService.getLeagues()
+        return poeApiService.getLeagues()
     }
 
     fun getCurrency(
@@ -28,11 +30,10 @@ class PoeEconomyRemoteDataSource @Inject constructor() {
         @CurrencyType type: String
     ): Flow<List<Item>> {
         return flow {
-            Singletons
-                .poeNinjaService
+            poeNinjaService
                 .getCurrency(league, type)
                 .let { emit(it) }
-            }
+        }
             .map { lines ->
                 lines.lines.map { it.toDbEntity(ItemCategory.fromType(type)) }
             }
@@ -44,24 +45,23 @@ class PoeEconomyRemoteDataSource @Inject constructor() {
         @ItemType type: String
     ): Flow<List<Item>> {
         return flow {
-                val items = Singletons.poeNinjaService.getItems(league, type)
-                emit(items)
-            }
+            val items = poeNinjaService.getItems(league, type)
+            emit(items)
+        }
             .map { lines ->
                 lines.lines.map { it.toDbEntity(ItemCategory.fromType(type)) }
             }
             .flowOn(Dispatchers.IO)
     }
 
-    fun getItemsSingle(
+    /*fun getItemsSingle(
         league: String,
         @ItemType type: String
     ): Single<List<Item>> {
-        return Singletons
-            .poeNinjaService
+        return poeNinjaService
             .getItemsSingle(league, type)
             .map { lines ->
                 lines.lines.map { it.toDbEntity(ItemCategory.fromType(type)) }
             }
-    }
+    }*/
 }

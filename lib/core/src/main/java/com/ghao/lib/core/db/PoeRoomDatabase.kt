@@ -2,10 +2,11 @@ package com.ghao.lib.core.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.ghao.lib.core.data.Transaction
 
 @Database(entities = [Transaction::class], version = 1)
-// @TypeConverters(DateTimeConverter::class)
+@TypeConverters(DateTimeConverter::class)
 abstract class PoeRoomDatabase : RoomDatabase() {
 
     abstract fun poeEconomyDao(): PoeEconomyDao
